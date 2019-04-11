@@ -14,8 +14,6 @@ import { Clients } from "./clients.decorator";
 export class ClientsController {
     constructor(private ClientsService: ClientsService) {}
 
-
-
     @Get('api/clients')
     showAllUsers() {
         return this.ClientsService.showAll();
