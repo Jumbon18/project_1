@@ -6,7 +6,6 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon server/main.ts",
-
     "build": "tsc -p tsconfig.build.json",
     "format": "prettier --write \"src/**/*.ts\"",
     "start": "ts-node src/main.ts",
