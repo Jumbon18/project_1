@@ -27,7 +27,7 @@ export class ClientsService {
     async login(data: ClientsDTO) {
         const { username, password } = data;
         const client = await this.clientRepository.findOne({ where: { username } });
-        if (!client || !(client.password !== password)) {
+        if (!client || (client.password !== password)) {
             throw new HttpException(
                 'Invalid username/password',
                 HttpStatus.BAD_REQUEST,
