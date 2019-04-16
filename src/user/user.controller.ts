@@ -10,13 +10,13 @@ import {
   ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { User } from '../entities/entity.user';
-import { UsersService } from './users.service';
+import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('api/users')
-export class UsersController {
-  constructor(private readonly service: UsersService) {}
+export class UserController {
+  constructor(private readonly service: UserService) {}
 
   @Post()
   public async create(@Body() createUserDto: CreateUserDto): Promise<User> {

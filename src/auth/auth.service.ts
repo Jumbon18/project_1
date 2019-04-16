@@ -1,26 +1,26 @@
-import { Injectable, Inject, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, Module, Inject, forwardRef } from '@nestjs/common';
 import { sign } from 'jsonwebtoken';
-import { UsersService } from '../user/users.service';
+import { UserService } from '../user/user.service';
 import { CryptographerService } from './cryptographer.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly service: UsersService,
+    private readonly usersService: UserService,
     private readonly cryptoService: CryptographerService) {
   }
 
   public async signUp(user: CreateUserDto) {
     user['password'] = await this.cryptoService.hashPassword(user.password);
-    return this.service.create(user)
+    return this.usersService.create(user)
       .then(user => {
         return this.createToken(user);
       });
   }
 
   public async signIn(email: string, password: string) {
-    return await this.service.findOneByEmail(email)
+    return await this.usersService.findOneByEmail(email)
       .then(async user => {
         return await this.cryptoService.checkPassword(user.password, password)
           ? Promise.resolve(user)
@@ -30,7 +30,7 @@ export class AuthService {
   }
 
   public async verify(payload: number) {
-    return await this.service.findOne(payload)
+    return await this.usersService.findOne(payload)
       .then(signedUser => Promise.resolve(signedUser))
       .catch(err => Promise.reject(new UnauthorizedException('Invalid Authorization')));
   }

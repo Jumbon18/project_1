@@ -2,23 +2,27 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmService } from './database/typeorm.service';
 import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './user/users.module';
-import { UsersController } from './user/users.controller';
+import { UserModule } from './user/user.module';
+import { AppService } from './app.service';
+import { AppController } from './app.controller';
+import { UserController } from './user/user.controller';
+import { UserService } from './user/user.service';
 
 @Module({
-  controllers: [
-    UsersController,
-  ],
   imports: [
-    // services
     TypeOrmModule.forRootAsync({
       imports: [],
       useClass: TypeOrmService,
     }),
-
-    // api routes
     AuthModule,
-    UsersModule,
+    UserModule,
+  ],
+  controllers: [
+    AppController,
+    UserController
+  ],
+  providers: [
+    AppService,
   ],
 })
 export class AppModule {

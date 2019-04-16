@@ -6,7 +6,7 @@ import { User } from '../entities/entity.user';
 import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   constructor(
     @InjectRepository(User) private readonly repository: Repository<User>,
   ) {}
@@ -37,3 +37,4 @@ export class UsersService {
     await this.repository.delete(id);
   }
 }
+
