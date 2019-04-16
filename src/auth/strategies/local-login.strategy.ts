@@ -1,30 +1,33 @@
 import { compare } from 'bcrypt';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 import { AuthService } from '../auth.service';
-import { User } from 'src/database/entities/user.entity';
 
 @Injectable()
 export class LocalLoginStrategy extends PassportStrategy(
   Strategy,
-  'local-login',
+  'local-signIn',
 ) {
   constructor(private readonly service: AuthService) {
     super({
       usernameField: 'email',
-      passwordField: 'password',
+      passReqToCallback: false
     });
   }
 
-  public async validate(email, password) {
-    const user: User = await this.service.validateUserByEmail(email);
-    if (!user) {
-      return false;
-    }
-    if (!(await compare(password, user.password))) {
-      return false;
-    }
-    return user;
+  public async validate(email, password, done: Function) {
+    return await this.service.signIn(email, password)
+      .then(user => done(null, user))
+      .catch(err => done(err, false));
   }
+}
+
+export const callback = (err, user, info) => {
+  if (typeof info != 'undefined') {
+    throw new UnauthorizedException(info.message)
+  } else if (err || !user) {
+    throw err || new UnauthorizedException();
+  }
+  return user;
 }

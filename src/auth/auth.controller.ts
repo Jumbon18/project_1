@@ -5,48 +5,33 @@ import {
   Post,
   Req,
   Res,
-  Next,
   ValidationPipe,
-  UsePipes,
+  Body, HttpStatus, HttpCode, UseGuards,
 } from '@nestjs/common';
-import { RegisterUser } from './decorators/register-user.decorator';
-import { RegisterUserDto } from './dto/register-user.dto';
-import { LoginUser } from './decorators/login-user.decorator';
-import { LoginUserDto } from './dto/login-user.dto';
+import { CreateUserDto } from '../user/dto/create-user.dto';
+import { AuthService } from './auth.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('api/auth')
 export class AuthController {
-  @Post('register')
-  public async register(
-    @RegisterUser(new ValidationPipe()) user: RegisterUserDto,
-    @Req() req,
-    @Res() res,
-    @Next() next,
-  ) {
-    authenticate('local-register', (err, user) => {
-      req.logIn(user, err => {
-        req.session.save(() => res.json(req.user));
-      });
-    })(req, res, next);
+  constructor(private readonly authService: AuthService) {
   }
 
-  @Post('login')
-  @UsePipes(new ValidationPipe())
-  public async login(
-    @LoginUser(new ValidationPipe()) user: LoginUserDto,
-    @Req() req,
-    @Res() res,
-    @Next() next,
-  ) {
-    authenticate('local-login', (err, user) => {
-      req.logIn(user, err => {
-        req.session.save(() => res.json(req.user));
-      });
-    })(req, res, next);
+  @Post('signup')
+  public async signUp(@Body(new ValidationPipe()) user: CreateUserDto) {
+    return await this.authService.signUp(user);
   }
 
-  @Get('logout')
-  public async logout(@Req() req, @Res() res) {
+  @Post('signin')
+  @UseGuards(AuthGuard('local-signIn'))
+  @HttpCode(HttpStatus.OK)
+  public async login(@Req() req) {
+    return await this.authService.createToken(req.user);
+
+  }
+
+  @Get('signout')
+  public async signout(@Req() req, @Res() res) {
     req.session.destroy(() => res.json(true));
   }
 }

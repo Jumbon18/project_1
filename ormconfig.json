@@ -1,16 +1,13 @@
-{
-  "name": "default",
-  "type": "postgres",
-  "host": "localhost",
-  "port": 5432,
-  "username": "postgres",
-  "password": "postgres",
-  "database": "FilmPass",
-  "synchronize": true,
-  "dropSchema": false,
-  "logging": true,
-  "entities": [
-    "src/database/entities/*.entity.ts",
-    "dist/database/entities/*.entity.js"
-  ]
+ {
+"name": "default",
+"type": "postgres",
+"host": "localhost",
+"port": 5432,
+"username":"postgres",
+"password": "postgres",
+"database": "FilmPass",
+"synchronize": true,
+"dropSchema": false,
+"logging": true,
+"entities": ["src/**/entity.*.ts", "dist/**/entity.*.js"]
 }

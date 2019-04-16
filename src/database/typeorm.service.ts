@@ -7,7 +7,7 @@ export class TypeOrmService implements TypeOrmOptionsFactory {
 
   createTypeOrmOptions(): TypeOrmModuleOptions {
     return {
-      entities: [__dirname + '/../database/entities/**/*.entity{.ts,.js}'],
+      entities: [__dirname + '../entities/*.entity{.ts,.js}'],
     };
   }
 }

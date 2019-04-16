@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 import { AuthService } from '../auth.service';
-import { User } from 'src/database/entities/user.entity';
 
 @Injectable()
 export class LocalRegisterStrategy extends PassportStrategy(
@@ -17,12 +16,10 @@ export class LocalRegisterStrategy extends PassportStrategy(
     });
   }
 
-  public async validate(req, email, password) {
-    const { name } = req.body;
-    const user: User = await this.service.registerUserIfNotExist({
-      name,
-      email,
-      password,
+  public async validate(email: string, password: string) {
+    const user = await this.service.signUp({
+      email: email,
+      password: password,
     });
     if (user) {
       return user;

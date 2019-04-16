@@ -9,7 +9,7 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
 } from '@nestjs/common';
-import { User } from 'src/database/entities/user.entity';
+import { User } from '../entities/entity.user';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -42,8 +42,6 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<void> {
     const user: User = await this.service.findOne(id);
-    const { name } = updateUserDto;
-    user.name = name;
     await this.service.save(user);
   }
 
