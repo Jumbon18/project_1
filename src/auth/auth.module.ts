@@ -4,12 +4,12 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { LocalRegisterStrategy } from './strategies/local-register.stratery';
 import { LocalLoginStrategy } from './strategies/local-login.strategy';
-import { UserService } from '../user/user.service';
+import { CryptographerService } from './cryptographer.service';
 
 @Module({
-  imports: [forwardRef(() => UserModule)],
+  imports:[UserModule],
   controllers: [AuthController],
-  providers: [AuthService, UserService, LocalRegisterStrategy, LocalLoginStrategy],
+  providers: [AuthService, LocalRegisterStrategy, LocalLoginStrategy, CryptographerService],
 })
 export class AuthModule {
 }

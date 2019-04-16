@@ -7,20 +7,20 @@ import { CreateUserDto } from '../user/dto/create-user.dto';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly usersService: UserService,
+    private readonly userService: UserService,
     private readonly cryptoService: CryptographerService) {
   }
 
   public async signUp(user: CreateUserDto) {
     user['password'] = await this.cryptoService.hashPassword(user.password);
-    return this.usersService.create(user)
+    return this.userService.create(user)
       .then(user => {
         return this.createToken(user);
       });
   }
 
   public async signIn(email: string, password: string) {
-    return await this.usersService.findOneByEmail(email)
+    return await this.userService.findOneByEmail(email)
       .then(async user => {
         return await this.cryptoService.checkPassword(user.password, password)
           ? Promise.resolve(user)
@@ -30,7 +30,7 @@ export class AuthService {
   }
 
   public async verify(payload: number) {
-    return await this.usersService.findOne(payload)
+    return await this.userService.findOne(payload)
       .then(signedUser => Promise.resolve(signedUser))
       .catch(err => Promise.reject(new UnauthorizedException('Invalid Authorization')));
   }
