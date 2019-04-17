@@ -16,10 +16,11 @@ export class LocalRegisterStrategy extends PassportStrategy(
     });
   }
 
-  public async validate(email: string, password: string) {
-    const user = await this.service.signUp({
+  public async validate(email: string, password: string, salt:string) {
+    const user = await this.service.register({
       email: email,
-      password: password,
+      password_hash: password,
+      salt: salt
     });
     if (user) {
       return user;

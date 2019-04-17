@@ -1,5 +1,4 @@
-import { compare } from 'bcrypt';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 import { AuthService } from '../auth.service';
@@ -7,7 +6,7 @@ import { AuthService } from '../auth.service';
 @Injectable()
 export class LocalLoginStrategy extends PassportStrategy(
   Strategy,
-  'local-signIn',
+  'local-login',
 ) {
   constructor(private readonly service: AuthService) {
     super({
@@ -17,17 +16,8 @@ export class LocalLoginStrategy extends PassportStrategy(
   }
 
   public async validate(email, password, done: Function) {
-    return await this.service.signIn(email, password)
+    return await this.service.login(email, password)
       .then(user => done(null, user))
       .catch(err => done(err, false));
   }
-}
-
-export const callback = (err, user, info) => {
-  if (typeof info != 'undefined') {
-    throw new UnauthorizedException(info.message)
-  } else if (err || !user) {
-    throw err || new UnauthorizedException();
-  }
-  return user;
 }

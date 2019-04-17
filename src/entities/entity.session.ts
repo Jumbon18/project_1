@@ -1,16 +1,17 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import * as uuid from 'uuid/v4';
+import { User } from './entity.user';
 
 @Entity()
 export class Session {
-  @PrimaryColumn({
-    type: 'varchar',
-    collation: 'default',
-  })
-  sid: string;
 
-  @Column('json')
-  sess: string;
+  @PrimaryGeneratedColumn()
+  sid: uuid;
 
-  @Column('timestamp')
-  expire: number;
+  @ManyToOne(() => User, user => user.id)
+  @Column('uuid')
+  user: User;
+
+  @Column('text')
+  token: string;
 }

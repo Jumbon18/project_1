@@ -1,10 +1,11 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import * as uuid from 'uuid/v4';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: uuid;
 
   @Column('text', {
     unique: true,
@@ -13,7 +14,11 @@ export class User {
 
   @Column('text')
   @Exclude()
-  password: string;
+  password_hash: string;
+
+  @Column('text')
+  @Exclude()
+  salt: string;
 
   constructor(partial: Partial<User>) {
     Object.assign(this, partial);

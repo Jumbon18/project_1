@@ -13,9 +13,9 @@ export class UserService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    let { email, password } = createUserDto;
-    password = await hash(password, 8);
-    return await this.repository.create({ email, password });
+    let { email, password_hash , salt } = createUserDto;
+    password_hash = await hash(password_hash, 8);
+    return await this.repository.create({ email, password_hash, salt });
   }
 
   async findAll(): Promise<User[]> {

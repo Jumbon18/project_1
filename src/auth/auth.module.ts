@@ -5,9 +5,10 @@ import { AuthService } from './auth.service';
 import { LocalRegisterStrategy } from './strategies/local-register.stratery';
 import { LocalLoginStrategy } from './strategies/local-login.strategy';
 import { CryptographerService } from './cryptographer.service';
+import { SessionModule } from '../session/session.module';
 
 @Module({
-  imports:[UserModule],
+  imports:[UserModule, SessionModule],
   controllers: [AuthController],
   providers: [AuthService, LocalRegisterStrategy, LocalLoginStrategy, CryptographerService],
 })

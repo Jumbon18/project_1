@@ -17,21 +17,20 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {
   }
 
-  @Post('signup')
-  public async signUp(@Body(new ValidationPipe()) user: CreateUserDto) {
-    return await this.authService.signUp(user);
+  @Post('register')
+  public async register(@Body(new ValidationPipe()) user: CreateUserDto) {
+    return await this.authService.register(user);
   }
 
-  @Post('signin')
-  @UseGuards(AuthGuard('local-signIn'))
+  @Post('login')
+  @UseGuards(AuthGuard('local-login'))
   @HttpCode(HttpStatus.OK)
   public async login(@Req() req) {
-    return await this.authService.createToken(req.user);
-
+    return await this.authService.login(req.email, req.password);
   }
 
-  @Get('signout')
-  public async signout(@Req() req, @Res() res) {
-    req.session.destroy(() => res.json(true));
+  @Get('logout')
+  public async logout(@Req() req, @Res() res) {
+    req.session.destroy(() => res.json());
   }
 }

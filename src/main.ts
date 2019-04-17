@@ -2,8 +2,6 @@ import { join } from 'path';
 import { config } from 'dotenv';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import * as session from 'express-session';
-import * as passport from 'passport';
 import {NestExpressApplication} from "@nestjs/platform-express";
 
 async function bootstrap() {
