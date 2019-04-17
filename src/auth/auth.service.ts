@@ -27,7 +27,7 @@ export class AuthService {
   public async login(email: string, password: string) {
     return await this.userService.findOneByEmail(email)
       .then(async user => {
-        await this.cryptoService.checkPassword(user.password_hash, password)
+        await this.cryptoService.checkPassword(user.password_hash, user.salt, password)
           ? Promise.resolve(user)
           : Promise.reject(new UnauthorizedException('Invalid password'));
         return await this.getToken(user);
@@ -36,12 +36,13 @@ export class AuthService {
   }
 
   private async getToken(user: User) {
-    return await this.sessionService.findOneByUser(user)
+    const token = this.createToken(user);
+    return await this.sessionService.create(new CreateSessionDto(user, token))
       .then(signedUser => Promise.resolve(signedUser))
       .catch(err => Promise.reject(err));
   }
 
-  public async createToken(user) {
+  public async createToken(user: User) {
     const token = this.cryptoService.createToken();
     return this.sessionService.create(new CreateSessionDto(user, token));
   }

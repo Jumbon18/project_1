@@ -21,11 +21,11 @@ export class SessionService {
     return await this.repository.find();
   }
 
-  async findOneByUser(user: User): Promise<Session> {
+  async findOneByUser(user: User): Promise<Session | undefined> {
     return await this.repository.findOne(user.id);
   }
 
-  async findOne(id: number): Promise<Session> {
+  async findOne(id: number): Promise<Session | undefined> {
     return await this.repository.findOne(id);
   }
 
