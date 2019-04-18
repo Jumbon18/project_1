@@ -20,7 +20,7 @@ export class AuthService {
     user.salt = salt;
     return this.userService.create(user)
       .then(user => {
-        return this.createToken(user);
+         return this.createToken(user);
       });
   }
 
@@ -28,9 +28,8 @@ export class AuthService {
     return await this.userService.findOneByEmail(email)
       .then(async user => {
         await this.cryptoService.checkPassword(user.password_hash, user.salt, password)
-          ? Promise.resolve(user)
+          ? await this.getToken(user)
           : Promise.reject(new UnauthorizedException('Invalid password'));
-        return await this.getToken(user);
       })
       .catch(err => Promise.reject(err));
   }
@@ -44,6 +43,7 @@ export class AuthService {
 
   public async createToken(user: User) {
     const token = this.cryptoService.createToken();
+    //const user_id = this.userService.findOneByEmail(user.email).then(user => user.id);
     return this.sessionService.create(new CreateSessionDto(user, token));
   }
 }

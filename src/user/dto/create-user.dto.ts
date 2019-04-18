@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsEmpty, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
@@ -10,6 +10,6 @@ export class CreateUserDto {
   password_hash: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsEmpty()
   salt: string;
 }

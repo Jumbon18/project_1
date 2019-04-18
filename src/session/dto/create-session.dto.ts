@@ -3,7 +3,10 @@ import { User } from '../../entities/entity.user';
 
 export class CreateSessionDto {
 
-  constructor(private readonly User, private readonly Token) {}
+  constructor(user: User, token: string) {
+    this.user = user;
+    this.token = token;
+  }
 
   @IsString()
   @IsNotEmpty()
