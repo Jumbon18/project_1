@@ -13,6 +13,5 @@ export class Session {
   user: User;
 
   @Column('text')
-  @IsNull()
   token: string;
 }

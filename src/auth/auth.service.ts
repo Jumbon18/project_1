@@ -5,6 +5,7 @@ import { CryptographerService } from './cryptographer.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { CreateSessionDto } from '../session/dto/create-session.dto';
 import { SessionService } from '../session/session.service';
+import { defaultMetadataStorage } from 'class-transformer/storage';
 
 @Injectable()
 export class AuthService {
@@ -14,13 +15,12 @@ export class AuthService {
     private readonly cryptoService: CryptographerService) {
   }
 
-  public async register(user: CreateUserDto) {
-    const { hash, salt } = await this.cryptoService.hashPassword(user.password);
-    user.password = hash;
-    user.salt = salt;
-    return this.userService.create(user)
+  public async register(userDto: CreateUserDto) {
+    const { hash, salt } = await this.cryptoService.hashPassword(userDto.password);
+    userDto.password = hash;
+    return this.userService.create(userDto, salt)
       .then(user => {
-         return this.createToken(user);
+        return this.createToken(user);
       });
   }
 

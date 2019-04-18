@@ -1,16 +1,14 @@
-import { authenticate } from 'passport';
 import {
   Controller,
   Get,
   Post,
   Req,
   Res,
-  ValidationPipe,
   Body, HttpStatus, HttpCode, UseGuards,
 } from '@nestjs/common';
-import { CreateUserDto } from '../user/dto/create-user.dto';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
+import { CreateUserDto } from '../user/dto/create-user.dto';
 
 @Controller('api/auth')
 export class AuthController {
@@ -18,8 +16,8 @@ export class AuthController {
   }
 
   @Post('register')
-  public async register(@Body() user: CreateUserDto) {
-    return await this.authService.register(user);
+  public async register(@Body() userDto: CreateUserDto) {
+    return await this.authService.register(userDto);
   }
 
   @Post('login')

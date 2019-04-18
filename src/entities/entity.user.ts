@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import * as uuid from 'uuid/v4';
+import { NullableTypeAnnotation } from 'babel-types';
 
 @Entity()
 export class User {

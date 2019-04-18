@@ -11,8 +11,8 @@ export class UserService {
   ) {
   }
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    let { email, password, salt } = createUserDto;
+  async create(createUserDto: CreateUserDto, salt: string): Promise<User> {
+    let { email, password } = createUserDto;
     return await this.repository.create({ email: email, password_hash: password, salt: salt });
   }
 
