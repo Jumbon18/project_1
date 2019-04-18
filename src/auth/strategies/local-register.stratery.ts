@@ -16,13 +16,9 @@ export class LocalRegisterStrategy extends PassportStrategy(
     });
   }
 
-  public async validate(email: string, password: string, salt:string) {
-    const user = await this.service.register({
-      email: email,
-      password_hash: password,
-      salt: salt
-    });
-    if (user) {
+  public async validate(email: string, password: string) {
+    const user = await this.service.login(email, password);
+    if (user != null) {
       return user;
     }
     return false;

@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, IsNull } from 'typeorm';
 import * as uuid from 'uuid/v4';
 import { User } from './entity.user';
 
@@ -13,5 +13,6 @@ export class Session {
   user: User;
 
   @Column('text')
+  @IsNull()
   token: string;
 }
