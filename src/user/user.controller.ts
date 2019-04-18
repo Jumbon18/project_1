@@ -16,11 +16,12 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('api/user')
 export class UserController {
-  constructor(private readonly service: UserService) {}
+  constructor(private readonly service: UserService) {
+  }
 
   @Post('create')
-  public async create(@Body() createUserDto: CreateUserDto): Promise<User> {
-    const user: User = await this.service.create(createUserDto);
+  public async create(@Body() createUser: CreateUserDto,@Body() salt: string): Promise<User> {
+    const user: User = await this.service.create(createUser, salt);
     return await this.service.save(user);
   }
 
