@@ -10,35 +10,35 @@ import { defaultMetadataStorage } from 'class-transformer/storage';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userService: UserService,
-    private readonly sessionService: SessionService,
-    private readonly cryptoService: CryptographerService) {
+      private readonly userService: UserService,
+      private readonly sessionService: SessionService,
+      private readonly cryptoService: CryptographerService) {
   }
 
   public async register(userDto: CreateUserDto) {
-    const { hash, salt } = await this.cryptoService.hashPassword(userDto.password);
+    const {hash, salt} = await this.cryptoService.hashPassword(userDto.password);
     userDto.password = hash;
-    return this.userService.create(userDto, salt)
-      .then(user => {
-        return this.createToken(user);
-      });
+
+    const user = await this.userService.create(userDto, salt);
+    console.log(user);
+    //return await this.createToken(user);
   }
 
   public async login(email: string, password: string) {
     return await this.userService.findOneByEmail(email)
-      .then(async user => {
-        return await this.cryptoService.checkPassword(user.password_hash, user.salt, password)
-          ? await this.getToken(user)
-          : Promise.reject(new UnauthorizedException('Invalid password'));
-      })
-      .catch(err => Promise.reject(err));
+        .then(async user => {
+          return await this.cryptoService.checkPassword(user.password_hash, user.salt, password)
+              ? await this.getToken(user)
+              : Promise.reject(new UnauthorizedException('Invalid password'));
+        })
+        .catch(err => Promise.reject(err));
   }
 
   private async getToken(user: User) {
     const token = await this.createToken(user);
     return await this.sessionService.create(new CreateSessionDto(user, token))
-      .then(signedUser => Promise.resolve(signedUser))
-      .catch(err => Promise.reject(err));
+        .then(signedUser => Promise.resolve(signedUser))
+        .catch(err => Promise.reject(err));
   }
 
   public async createToken(user: User): Promise<string> {

@@ -13,7 +13,9 @@ export class UserService {
 
   async create(createUserDto: CreateUserDto, salt: string): Promise<User> {
     let { email, password } = createUserDto;
-    return await this.repository.create({ email: email, password_hash: password, salt: salt });
+    const user = await this.repository.create({ email: email, password_hash: password, salt: salt });
+    await this.repository.insert(user);
+    return user;
   }
 
   async findAll(): Promise<User[]> {
@@ -24,7 +26,7 @@ export class UserService {
     return await this.repository.findOne(id);
   }
 
-  async findOneByEmail(email: string): Promise<User> {
+  async findOneByEmail(email: string): Promise<User | undefined> {
     return await this.repository.findOne({ email: email });
   }
 
