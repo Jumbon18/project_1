@@ -35,15 +35,16 @@ export class AuthService {
   }
 
   private async getToken(user: User) {
-    const token = this.createToken(user);
+    const token = await this.createToken(user);
     return await this.sessionService.create(new CreateSessionDto(user, token))
       .then(signedUser => Promise.resolve(signedUser))
       .catch(err => Promise.reject(err));
   }
 
-  public async createToken(user: User) {
+  public async createToken(user: User): Promise<string> {
     const token = this.cryptoService.createToken();
     //const user_id = this.userService.findOneByEmail(user.email).then(user => user.id);
-    return this.sessionService.create(new CreateSessionDto(user, token));
+    const session = await this.sessionService.create(new CreateSessionDto(user, token));
+    return session.token;
   }
 }

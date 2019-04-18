@@ -7,7 +7,7 @@ export class CreateUserDto {
 
   @IsString()
   @IsNotEmpty()
-  password_hash: string;
+  password: string;
 
   @IsString()
   @IsEmpty()
