@@ -24,8 +24,7 @@ export class CryptographerService {
 
   public checkPassword(passwordHash: string, salt: string, password: string) {
     const basePassword = this.getHash(password, salt);
-    const comparablePassword = this.getHash(passwordHash, salt);
-    return basePassword === comparablePassword;
+    return basePassword === passwordHash;
   }
 
 }

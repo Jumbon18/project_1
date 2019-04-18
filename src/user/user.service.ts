@@ -27,7 +27,7 @@ export class UserService {
   }
 
   async findOneByEmail(email: string): Promise<User | undefined> {
-    return await this.repository.findOne({ email: email });
+    return await this.repository.findOne({email:email});
   }
 
   async save(user: User): Promise<User> {

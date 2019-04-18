@@ -21,10 +21,9 @@ export class AuthController {
   }
 
   @Post('login')
-  @UseGuards(AuthGuard('local-login'))
   @HttpCode(HttpStatus.OK)
-  public async login(@Req() req) {
-    return await this.authService.login(req.email, req.password);
+  public async login(@Body() userDto: CreateUserDto) {
+    return await this.authService.login(userDto);
   }
 
   @Get('logout')

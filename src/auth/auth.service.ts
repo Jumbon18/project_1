@@ -22,10 +22,10 @@ export class AuthService {
     return await this.createToken(user);
   }
 
-  public async login(email: string, password: string) {
-    return await this.userService.findOneByEmail(email)
+  public async login(userDto: CreateUserDto) {
+     await this.userService.findOneByEmail(userDto.email)
         .then(async user => {
-          return await this.cryptoService.checkPassword(user.password_hash, user.salt, password)
+          return await this.cryptoService.checkPassword(user.password_hash, user.salt, userDto.password)
               ? await this.getToken(user)
               : Promise.reject(new UnauthorizedException('Invalid password'));
         })
@@ -33,10 +33,7 @@ export class AuthService {
   }
 
   private async getToken(user: User) {
-    const token = await this.createToken(user);
-    return await this.sessionService.create(new CreateSessionDto(user, token))
-        .then(signedUser => Promise.resolve(signedUser))
-        .catch(err => Promise.reject(err));
+    return await this.createToken(user);
   }
 
   public async createToken(user: User): Promise<string> {
