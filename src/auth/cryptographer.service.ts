@@ -22,7 +22,7 @@ export class CryptographerService {
     return { hash, salt };
   }
 
-  public checkPassword(passwordHash: string, salt: string, password: string) {
+  public checkPassword(passwordHash: string, salt: string, password: string): boolean {
     const basePassword = this.getHash(password, salt);
     return basePassword === passwordHash;
   }
