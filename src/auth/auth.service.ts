@@ -5,7 +5,6 @@ import { CryptographerService } from './cryptographer.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { CreateSessionDto } from '../session/dto/create-session.dto';
 import { SessionService } from '../session/session.service';
-import { defaultMetadataStorage } from 'class-transformer/storage';
 
 @Injectable()
 export class AuthService {
@@ -20,8 +19,7 @@ export class AuthService {
     userDto.password = hash;
 
     const user = await this.userService.create(userDto, salt);
-    console.log(user);
-    //return await this.createToken(user);
+    return await this.createToken(user);
   }
 
   public async login(email: string, password: string) {
@@ -43,8 +41,7 @@ export class AuthService {
 
   public async createToken(user: User): Promise<string> {
     const token = this.cryptoService.createToken();
-    const user_id = await this.userService.findOneByEmail(user.email).then(u => u.id);
-    const session = await this.sessionService.create(new CreateSessionDto(user_id, token));
+    const session = await this.sessionService.create(new CreateSessionDto(user, token));
     return session.token;
   }
 }

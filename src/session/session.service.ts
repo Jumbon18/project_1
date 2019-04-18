@@ -14,7 +14,9 @@ export class SessionService {
 
   async create(createSessionDto: CreateSessionDto): Promise<Session> {
     let { user, token } = createSessionDto;
-    return await this.repository.create({ token, user });
+    const session = await this.repository.create({ token, user });
+    await this.repository.insert(session);
+    return session;
   }
 
   async findAll(): Promise<Session[]> {
