@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { Session } from 'data/database/entities/Session';
 import { SessionManager } from 'domain/session/SessionManager';
-import { CreateSessionDto } from 'entities/CreateSessionDto';
+import { CreateSessionDto } from 'presentation/api/entities/CreateSessionDto';
 
 @Controller('api/user')
 export class SessionController {
@@ -20,12 +20,6 @@ export class SessionController {
   public async create(@Body() CreateSessionDto: CreateSessionDto): Promise<Session> {
     const session: Session = await this.service.create(CreateSessionDto);
     return await this.service.save(session);
-  }
-
-  @Get()
-  @UseInterceptors(ClassSerializerInterceptor)
-  public async findAll(): Promise<Session[]> {
-    return await this.service.findAll();
   }
 
   @Get(':id')

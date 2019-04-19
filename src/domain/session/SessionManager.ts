@@ -1,41 +1,24 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Session } from 'data/database/entities/Session';
-import { User } from 'data/database/entities/User';
-import { CreateSessionDto } from 'entities/CreateSessionDto';
+import {Injectable} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {Session} from 'data/database/entities/Session';
+import {CreateSessionDto} from 'presentation/api/entities/CreateSessionDto';
+import {SessionRepository} from "data/repositories/SessionRepository";
 
 @Injectable()
 export class SessionManager {
-  constructor(
-    @InjectRepository(Session) private readonly repository: Repository<Session>,
-  ) {
-  }
+    constructor(@InjectRepository(Session) private readonly repository: SessionRepository) {
+    }
 
-  async create(createSessionDto: CreateSessionDto): Promise<Session> {
-    let { user, token } = createSessionDto;
-    const session = await this.repository.create({ token, user });
-    await this.repository.insert(session);
-    return session;
-  }
+    async create(createSessionDto: CreateSessionDto): Promise<Session> {
+        let {user, token} = createSessionDto;
+        return await this.repository.insert({token, user});
+    }
 
-  async findAll(): Promise<Session[]> {
-    return await this.repository.find();
-  }
+    async findOne(id: number): Promise<Session | undefined> {
+        return await this.repository.findOne(id);
+    }
 
-  async findOneByUser(user: User): Promise<Session | undefined> {
-    return await this.repository.findOne(user.id);
-  }
-
-  async findOne(id: number): Promise<Session | undefined> {
-    return await this.repository.findOne(id);
-  }
-
-  async save(session: Session): Promise<Session> {
-    return await this.repository.save(session);
-  }
-
-  async delete(id: number): Promise<void> {
-    await this.repository.delete(id);
-  }
+    async delete(id: number): Promise<void> {
+        await this.repository.delete(id);
+    }
 }

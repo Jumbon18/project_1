@@ -1,5 +1,5 @@
 import { IsString } from 'class-validator';
-import { UserDto } from './user.dto';
+import { UserDto } from 'presentation/api/entities/UserDto';
 
 export class SessionDto {
   @IsString()

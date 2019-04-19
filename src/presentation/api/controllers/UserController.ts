@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { User } from 'data/database/entities/User';
 import { UserManager } from 'domain/user/UserManager';
-import { CreateUserDto } from 'entities/CreateUserDto';
+import { CreateUserDto } from 'presentation/api/entities/CreateUserDto';
 
 @Controller('api/user')
 export class UserController {
@@ -21,12 +21,6 @@ export class UserController {
   public async create(@Body() createUser: CreateUserDto,@Body() salt: string): Promise<User> {
     const user: User = await this.service.create(createUser, salt);
     return await this.service.save(user);
-  }
-
-  @Get()
-  @UseInterceptors(ClassSerializerInterceptor)
-  public async findAll(): Promise<User[]> {
-    return await this.service.findAll();
   }
 
   @Get(':id')
