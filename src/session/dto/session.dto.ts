@@ -6,5 +6,5 @@ export class SessionDto {
   readonly token: string;
 
   @IsString()
-  readonly userDto: UserDto;
+  readonly user: UserDto;
 }

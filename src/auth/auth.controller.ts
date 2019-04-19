@@ -4,13 +4,12 @@ import {
   Post,
   Req,
   Res,
-  Body, HttpStatus, HttpCode, UseGuards,
+  Body, HttpStatus, HttpCode
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthGuard } from '@nestjs/passport';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 
-@Controller('api/auth')
+@Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {
   }
