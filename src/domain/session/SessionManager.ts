@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Session } from '../../data/database/entities/entity.session';
-import { User } from '../../data/database/entities/entity.user';
-import { CreateSessionDto } from '../../entities/create-session.dto';
+import { Session } from 'data/database/entities/Session';
+import { User } from 'data/database/entities/User';
+import { CreateSessionDto } from 'entities/CreateSessionDto';
 
 @Injectable()
 export class SessionManager {

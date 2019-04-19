@@ -2,16 +2,15 @@ import {
   Controller,
   Get,
   Post,
-  Put,
   Delete,
   Body,
   Param,
   UseInterceptors,
   ClassSerializerInterceptor,
 } from '@nestjs/common';
-import { Session } from '../../../data/database/entities/entity.session';
-import { SessionManager } from '../../../domain/session/session.manager';
-import { CreateSessionDto } from '../../../entities/create-session.dto';
+import { Session } from 'data/database/entities/Session';
+import { SessionManager } from 'domain/session/SessionManager';
+import { CreateSessionDto } from 'entities/CreateSessionDto';
 
 @Controller('api/user')
 export class SessionController {

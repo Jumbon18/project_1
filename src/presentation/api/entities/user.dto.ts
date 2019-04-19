@@ -1,9 +1,8 @@
 import { IsString } from 'class-validator';
-import * as uuid from 'uuid/v4';
 
 export class UserDto {
   @IsString()
-  readonly id: uuid;
+  readonly id: string;
 
   @IsString()
   readonly email: string;

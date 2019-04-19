@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { Exclude } from 'class-transformer';
-import * as uuid from 'uuid/v4';
+import uuid from 'uuid/v4';
 
 @Entity()
 export class User {
@@ -19,8 +19,4 @@ export class User {
   @Column('text')
   @Exclude()
   salt: string;
-
-  constructor(partial: Partial<User>) {
-    Object.assign(this, partial);
-  }
 }

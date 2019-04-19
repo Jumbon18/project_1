@@ -1,11 +1,11 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { User } from '../../data/database/entities/entity.user';
-import { UserManager } from '../user/user.manager';
-import { CryptographerService } from './cryptographer.service';
-import { CreateUserDto } from '../../entities/create-user.dto';
-import { CreateSessionDto } from '../../entities/create-session.dto';
-import { SessionManager } from '../session/session.manager';
-import { SessionDto } from '../../presentation/api/entities/session.dto';
+import { User } from 'data/database/entities/User';
+import { UserManager } from 'domain/user/UserManager';
+import { CryptographerService } from 'domain/auth/CryptographerService';
+import { CreateUserDto } from 'entities/CreateUserDto';
+import { CreateSessionDto } from 'entities/CreateSessionDto';
+import { SessionManager } from 'domain/session/SessionManager';
+import { SessionDto } from 'presentation/api/entities/session.dto';
 
 @Injectable()
 export class AuthManager {

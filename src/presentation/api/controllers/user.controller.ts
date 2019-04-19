@@ -2,16 +2,15 @@ import {
   Controller,
   Get,
   Post,
-  Put,
   Delete,
   Body,
   Param,
   UseInterceptors,
   ClassSerializerInterceptor,
 } from '@nestjs/common';
-import { User } from '../../../data/database/entities/entity.user';
-import { UserManager } from '../../../domain/user/user.manager';
-import { CreateUserDto } from '../../../entities/create-user.dto';
+import { User } from 'data/database/entities/User';
+import { UserManager } from 'domain/user/UserManager';
+import { CreateUserDto } from 'entities/CreateUserDto';
 
 @Controller('api/user')
 export class UserController {

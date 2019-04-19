@@ -6,8 +6,8 @@ import {
   Res,
   Body, HttpStatus, HttpCode
 } from '@nestjs/common';
-import { AuthManager } from '../../../domain/auth/auth.manager';
-import { CreateUserDto } from '../../../entities/create-user.dto';
+import { AuthManager } from 'domain/auth/AuthManager';
+import { CreateUserDto } from 'entities/CreateUserDto';
 
 @Controller('auth')
 export class AuthController {
