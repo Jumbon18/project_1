@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 import { AuthService } from '../auth.service';
+import { CreateUserDto } from '../../user/dto/create-user.dto';
 
 @Injectable()
 export class LocalRegisterStrategy extends PassportStrategy(
@@ -10,14 +11,14 @@ export class LocalRegisterStrategy extends PassportStrategy(
 ) {
   constructor(private readonly service: AuthService) {
     super({
-      usernameField: 'email',
+      usernameField: 'userDto',
       passwordField: 'password',
       passReqToCallback: true,
     });
   }
 
-  public async validate(email: string, password: string) {
-    const user = await this.service.login(email, password);
+  public async validate(userDto:CreateUserDto) {
+    const user = await this.service.login(userDto);
     if (user != null) {
       return user;
     }

@@ -1,10 +1,11 @@
-import {Injectable, UnauthorizedException} from '@nestjs/common';
-import {User} from '../entities/entity.user';
-import {UserService} from '../user/user.service';
-import {CryptographerService} from './cryptographer.service';
-import {CreateUserDto} from '../user/dto/create-user.dto';
-import {CreateSessionDto} from '../session/dto/create-session.dto';
-import {SessionService} from '../session/session.service';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { User } from '../entities/entity.user';
+import { UserService } from '../user/user.service';
+import { CryptographerService } from './cryptographer.service';
+import { CreateUserDto } from '../user/dto/create-user.dto';
+import { CreateSessionDto } from '../session/dto/create-session.dto';
+import { SessionService } from '../session/session.service';
+import { SessionDto } from '../session/dto/session.dto';
 
 @Injectable()
 export class AuthService {
@@ -35,9 +36,9 @@ export class AuthService {
         return await this.createToken(user);
     }
 
-    public async createToken(user: User): Promise<string> {
+    public async createToken(user: User): Promise<SessionDto> {
         const token = this.cryptoService.createToken();
         const session = await this.sessionService.create(new CreateSessionDto(user, token));
-        return session.token;
+      return { token: session.token, userDto: {email:user.email}};
     }
 }
