@@ -6,12 +6,12 @@ import {
   Res,
   Body, HttpStatus, HttpCode
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { CreateUserDto } from '../user/dto/create-user.dto';
+import { AuthManager } from '../../../domain/auth/auth.manager';
+import { CreateUserDto } from '../../../entities/create-user.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {
+  constructor(private readonly authService: AuthManager) {
   }
 
   @Post('register')

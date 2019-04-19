@@ -9,14 +9,13 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
 } from '@nestjs/common';
-import { User } from '../entities/entity.user';
-import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from '../../../data/database/entities/entity.user';
+import { UserManager } from '../../../domain/user/user.manager';
+import { CreateUserDto } from '../../../entities/create-user.dto';
 
 @Controller('api/user')
 export class UserController {
-  constructor(private readonly service: UserService) {
+  constructor(private readonly service: UserManager) {
   }
 
   @Post('create')
@@ -35,15 +34,6 @@ export class UserController {
   @UseInterceptors(ClassSerializerInterceptor)
   public async findOne(@Param('id') id): Promise<User> {
     return await this.service.findOne(id);
-  }
-
-  @Put(':id')
-  public async update(
-    @Param('id') id,
-    @Body() updateUserDto: UpdateUserDto,
-  ): Promise<void> {
-    const user: User = await this.service.findOne(id);
-    await this.service.save(user);
   }
 
   @Delete(':id')

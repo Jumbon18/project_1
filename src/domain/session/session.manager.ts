@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Session } from '../entities/entity.session';
-import { User } from '../entities/entity.user';
-import { CreateSessionDto } from './dto/create-session.dto';
+import { Session } from '../../data/database/entities/entity.session';
+import { User } from '../../data/database/entities/entity.user';
+import { CreateSessionDto } from '../../entities/create-session.dto';
 
 @Injectable()
-export class SessionService {
+export class SessionManager {
   constructor(
     @InjectRepository(Session) private readonly repository: Repository<Session>,
   ) {

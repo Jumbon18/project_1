@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsString } from 'class-validator';
-import { User } from '../../entities/entity.user';
+import { User } from '../data/database/entities/entity.user';
 
 export class CreateSessionDto {
 

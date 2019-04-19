@@ -9,13 +9,13 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
 } from '@nestjs/common';
-import { Session } from '../entities/entity.session';
-import { SessionService } from './session.service';
-import { CreateSessionDto } from './dto/create-session.dto';
+import { Session } from '../../../data/database/entities/entity.session';
+import { SessionManager } from '../../../domain/session/session.manager';
+import { CreateSessionDto } from '../../../entities/create-session.dto';
 
 @Controller('api/user')
 export class SessionController {
-  constructor(private readonly service: SessionService) {}
+  constructor(private readonly service: SessionManager) {}
 
   @Post()
   public async create(@Body() CreateSessionDto: CreateSessionDto): Promise<Session> {
