@@ -14,9 +14,9 @@ export class CryptoUtils {
     public static hashPassword(password: string) {
         /** Salt is a pseudo-random data buffer contains raw bytes represented in hex*/
         const salt: string = randomBytes(32).toString('hex');
-        const hash: string = CryptoUtils.getHash(password, salt);
-        /** Return the salt + hash of the password*/
-        return {hash, salt};
+        const passwordHash: string = CryptoUtils.getHash(password, salt);
+        /** Return the salt + passwordHash of the password*/
+        return {passwordHash, salt};
     }
 
     public static checkPassword(passwordHash: string, salt: string, password: string): boolean {

@@ -1,6 +1,6 @@
-import {CreateSessionDto} from "presentation/api/entities/CreateSessionDto";
 import Session from "data/database/entities/Session";
+import User from "data/database/entities/User";
 
-export abstract class ISessionStore {
-    abstract createSession(createSessionDto: CreateSessionDto): Promise<Session>;
+export default abstract class ISessionStore {
+    abstract createSession(token: string, user: User): Promise<Session>;
 }

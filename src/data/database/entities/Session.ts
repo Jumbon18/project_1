@@ -12,7 +12,6 @@ export default class Session {
     @Column('text')
     token: string;
 
-
     constructor(sid: string,
                 user: User,
                 token: string,

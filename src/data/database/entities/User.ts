@@ -11,7 +11,7 @@ export default class User {
     email: string;
 
     @Column('text')
-    password_hash: string;
+    passwordHash: string;
 
     @Column('text')
     salt: string;
@@ -23,7 +23,7 @@ export default class User {
     ) {
         this.id = id;
         this.email = email;
-        this.password_hash = password_hash;
+        this.passwordHash = password_hash;
         this.salt = salt;
     }
 }

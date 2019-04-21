@@ -1,6 +1,9 @@
-import {Body, Controller, Get, HttpCode, HttpStatus, Post} from '@nestjs/common';
-import {CreateUserDto} from 'presentation/api/entities/CreateUserDto';
+import {Body, Controller, Post} from '@nestjs/common';
 import {IAuthManager} from "domain/auth/IAuthManager";
+import RegisterRequest from "presentation/api/entities/auth/RegisterRequest";
+import Session from "presentation/api/entities/Session";
+import LoginRequest from "presentation/api/entities/auth/LoginRequest";
+import {mapApiSession} from "presentation/mappers/ApiMappers";
 
 @Controller("api")
 export class AuthController {
@@ -9,13 +12,14 @@ export class AuthController {
     ) {}
 
     @Post('register')
-    public async register(@Body() userDto: CreateUserDto) {
-        return await this.authManager.register(userDto);
+    public async register(@Body() {email, password}: RegisterRequest): Promise<Session> {
+        const session = await this.authManager.register(email, password);
+        return mapApiSession(session);
     }
 
     @Post('login')
-    @HttpCode(HttpStatus.OK)
-    public async login(@Body() userDto: CreateUserDto) {
-        return await this.authManager.login(userDto.email, userDto.password);
+    public async login(@Body() {email, password}: LoginRequest): Promise<Session> {
+        const session = await this.authManager.login(email, password);
+        return mapApiSession(session);
     }
 }

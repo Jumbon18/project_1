@@ -1,23 +1,24 @@
 import {Injectable} from "@nestjs/common";
 import {Repository} from "typeorm";
-import {CreateUserDto} from "presentation/api/entities/CreateUserDto";
-import User from "data/database/entities/User";
 import {InjectRepository} from '@nestjs/typeorm';
+import IUserStore from "./IUserStore";
+import User from "../entities/User";
 
 @Injectable()
-export class UserStore {
+export class UserStore extends IUserStore {
     constructor(
         @InjectRepository(User) private readonly repository: Repository<User>,
-    ) {}
+    ) {
+        super();
+    }
 
-    async create(createUserDto: CreateUserDto, salt: string): Promise<User> {
-        let {email, password} = createUserDto;
-        const user = await this.repository.create({email: email, password_hash: password, salt: salt});
+    async create(email: string, passwordHash: string, salt: string): Promise<User> {
+        const user = await this.repository.create({email, passwordHash, salt});
         await this.repository.insert(user);
         return user;
     }
 
     async findOneByEmail(email: string): Promise<User | undefined> {
-        return await this.repository.findOne({email: email});
+        return await this.repository.findOne({email});
     }
 }
