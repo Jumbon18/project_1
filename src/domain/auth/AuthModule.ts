@@ -1,16 +1,18 @@
-import { Module } from '@nestjs/common';
-import { UserModule } from 'domain/user/UserModule';
-import { AuthController } from 'presentation/api/controllers/AuthController';
-import { AuthManager } from 'domain/auth/AuthManager';
-import { LocalRegisterStrategy } from 'domain/auth/strategies/LocalRegisterStrategy';
-import { LocalLoginStrategy } from 'domain/auth/strategies/LocalLoginStrategy';
-import { CryptographerService } from 'domain/auth/CryptographerService';
-import { SessionModule } from 'domain/session/SessionModule';
+import {Module} from '@nestjs/common';
+import {AuthManager} from 'domain/auth/AuthManager';
+import {StoresModule} from "data/stores/StoresModule";
 
 @Module({
-  imports:[UserModule, SessionModule],
-  controllers: [AuthController],
-  providers: [AuthManager, LocalRegisterStrategy, LocalLoginStrategy, CryptographerService],
+    imports: [
+        StoresModule,
+    ],
+    providers: [
+        AuthManager,
+    ],
+    exports: [
+        AuthManager,
+    ],
 })
 export class AuthModule {
+    constructor() {}
 }

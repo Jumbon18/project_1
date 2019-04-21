@@ -1,32 +1,21 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Req,
-  Res,
-  Body, HttpStatus, HttpCode
-} from '@nestjs/common';
-import { AuthManager } from 'domain/auth/AuthManager';
-import { CreateUserDto } from 'presentation/api/entities/CreateUserDto';
+import {Body, Controller, Get, HttpCode, HttpStatus, Post} from '@nestjs/common';
+import {AuthManager} from 'domain/auth/AuthManager';
+import {CreateUserDto} from 'presentation/api/entities/CreateUserDto';
 
-@Controller('auth')
+@Controller("api")
 export class AuthController {
-  constructor(private readonly authService: AuthManager) {
-  }
+    constructor(
+        private readonly authManager: AuthManager,
+    ) {}
 
-  @Post('register')
-  public async register(@Body() userDto: CreateUserDto) {
-    return await this.authService.register(userDto);
-  }
+    @Post('register')
+    public async register(@Body() userDto: CreateUserDto) {
+        return await this.authManager.register(userDto);
+    }
 
-  @Post('login')
-  @HttpCode(HttpStatus.OK)
-  public async login(@Body() userDto: CreateUserDto) {
-    return await this.authService.login(userDto);
-  }
-
-  @Get('logout')
-  public async logout(@Req() req, @Res() res) {
-    req.session.destroy(() => res.json());
-  }
+    @Post('login')
+    @HttpCode(HttpStatus.OK)
+    public async login(@Body() userDto: CreateUserDto) {
+        return await this.authManager.login(userDto);
+    }
 }
