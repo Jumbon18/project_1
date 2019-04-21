@@ -1,8 +1,8 @@
 import {Module} from "@nestjs/common";
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {TypeOrmFactory} from "data/database/TypeOrmFactory";
-import {Session} from "data/database/entities/Session";
-import {User} from "data/database/entities/User";
+import Session from "data/database/entities/Session";
+import User from "data/database/entities/User";
 
 @Module({
     imports: [

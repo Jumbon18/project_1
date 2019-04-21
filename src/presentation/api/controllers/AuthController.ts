@@ -1,11 +1,11 @@
 import {Body, Controller, Get, HttpCode, HttpStatus, Post} from '@nestjs/common';
-import {AuthManager} from 'domain/auth/AuthManager';
 import {CreateUserDto} from 'presentation/api/entities/CreateUserDto';
+import {IAuthManager} from "domain/auth/IAuthManager";
 
 @Controller("api")
 export class AuthController {
     constructor(
-        private readonly authManager: AuthManager,
+        private readonly authManager: IAuthManager,
     ) {}
 
     @Post('register')
@@ -16,6 +16,6 @@ export class AuthController {
     @Post('login')
     @HttpCode(HttpStatus.OK)
     public async login(@Body() userDto: CreateUserDto) {
-        return await this.authManager.login(userDto);
+        return await this.authManager.login(userDto.email, userDto.password);
     }
 }

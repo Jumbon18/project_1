@@ -7,4 +7,12 @@ export class SessionDto {
 
     @IsString()
     readonly user: UserDto;
+
+    constructor(
+        token: string,
+        user: UserDto,
+    ) {
+        this.token = token;
+        this.user = user;
+    }
 }

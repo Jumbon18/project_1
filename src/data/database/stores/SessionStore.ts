@@ -1,16 +1,19 @@
 import {Injectable} from "@nestjs/common";
-import {Session} from "data/database/entities/Session";
 import {InjectRepository} from '@nestjs/typeorm';
 import {Repository} from "typeorm";
 import {CreateSessionDto} from "presentation/api/entities/CreateSessionDto";
+import {ISessionStore} from "data/database/stores/ISessionStore";
+import Session from "data/database/entities/Session";
 
 @Injectable()
-export class SessionStore {
+export class SessionStore extends ISessionStore {
     constructor(
         @InjectRepository(Session) private readonly repository: Repository<Session>,
-    ) {}
+    ) {
+        super();
+    }
 
-    async insert(createSessionDto: CreateSessionDto): Promise<Session> {
+    async createSession(createSessionDto: CreateSessionDto) {
         let {user, token} = createSessionDto;
         const session = await this.repository.create({token, user});
         await this.repository.insert(session);

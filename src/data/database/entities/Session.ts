@@ -1,15 +1,24 @@
 import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
-import uuid from 'uuid/v4';
-import {User} from 'data/database/entities/User';
+import User from 'data/database/entities/User';
 
 @Entity()
-export class Session {
-    @PrimaryGeneratedColumn()
-    sid: uuid;
+export default class Session {
+    @PrimaryGeneratedColumn("uuid")
+    sid: string;
 
     @ManyToOne(() => User, user => user.id)
     user: User;
 
     @Column('text')
     token: string;
+
+
+    constructor(sid: string,
+                user: User,
+                token: string,
+    ) {
+        this.sid = sid;
+        this.user = user;
+        this.token = token;
+    }
 }

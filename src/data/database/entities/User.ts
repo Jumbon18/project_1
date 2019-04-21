@@ -1,10 +1,9 @@
 import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
-import uuid from 'uuid/v4';
 
 @Entity()
-export class User {
-    @PrimaryGeneratedColumn()
-    id: uuid;
+export default class User {
+    @PrimaryGeneratedColumn("uuid")
+    id: string;
 
     @Column('text', {
         unique: true,
@@ -16,4 +15,15 @@ export class User {
 
     @Column('text')
     salt: string;
+
+    constructor(id: string,
+                email: string,
+                password_hash: string,
+                salt: string,
+    ) {
+        this.id = id;
+        this.email = email;
+        this.password_hash = password_hash;
+        this.salt = salt;
+    }
 }

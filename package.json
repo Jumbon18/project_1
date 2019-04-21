@@ -35,7 +35,8 @@
     "reflect-metadata": "^0.1.12",
     "rimraf": "^2.6.2",
     "rxjs": "^6.3.3",
-    "typeorm": "^0.2.16"
+    "typeorm": "^0.2.16",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@nestjs/testing": "^6.0.0",
@@ -51,7 +52,8 @@
     "ts-node": "^7.0.1",
     "tsconfig-paths": "^3.7.0",
     "tslint": "5.12.1",
-    "typescript": "^3.2.4"
+    "typescript": "^3.2.4",
+    "@types/uuid": "^3.4.4"
   },
   "jest": {
     "moduleFileExtensions": [

@@ -1,16 +1,20 @@
 import {Module} from '@nestjs/common';
 import {AuthManager} from 'domain/auth/AuthManager';
-import {StoresModule} from "data/stores/StoresModule";
+import {StoresModule} from "data/database/stores/StoresModule";
+import {IAuthManager} from "domain/auth/IAuthManager";
 
 @Module({
     imports: [
         StoresModule,
     ],
     providers: [
-        AuthManager,
+        {
+            provide: IAuthManager,
+            useClass: AuthManager,
+        },
     ],
     exports: [
-        AuthManager,
+        IAuthManager,
     ],
 })
 export class AuthModule {
