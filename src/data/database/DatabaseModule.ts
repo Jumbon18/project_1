@@ -12,7 +12,7 @@ import User from "data/database/entities/User";
         }),
         TypeOrmModule.forFeature([User, Session]),
     ],
-    exports: [
-    ]
+    exports: []
 })
-export class DatabaseModule {}
+export class DatabaseModule {
+}

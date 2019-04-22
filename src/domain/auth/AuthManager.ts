@@ -5,12 +5,14 @@ import User from "data/database/entities/User";
 import {mapDbSession} from "domain/mappers/DbMappers";
 import IUserStore from "data/database/stores/IUserStore";
 import ISessionStore from "data/database/stores/ISessionStore";
+import FacebookApi from "data/api/facebook/FacebookApi"
 
 @Injectable()
 export class AuthManager extends IAuthManager {
     constructor(
         private readonly userStore: IUserStore,
         private readonly sessionStore: ISessionStore,
+        private readonly facebookApi:FacebookApi
     ) {
         super();
     }
@@ -23,9 +25,8 @@ export class AuthManager extends IAuthManager {
     }
 
     public async registerSocial(type: string, token: string) {
-        const {passwordHash, salt} = await CryptoUtils.hashPassword(token);
-        const user = await this.userStore.create(type, passwordHash, salt);
-        return await this.createSession(user);
+        const res = await this.facebookApi.authenticate(token);
+        return {token: "", user: {id: "", email: ""}};
     }
 
     public async login(email: string, password: string) {
