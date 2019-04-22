@@ -22,7 +22,23 @@ export class AuthManager extends IAuthManager {
         return await this.createSession(user);
     }
 
+    public async registerSocial(type: string, token: string) {
+        const {passwordHash, salt} = await CryptoUtils.hashPassword(token);
+        const user = await this.userStore.create(type, passwordHash, salt);
+        return await this.createSession(user);
+    }
+
     public async login(email: string, password: string) {
+        const user = await this.userStore.findOneByEmail(email);
+        if (!user)
+            throw new UnauthorizedException('User not found');
+        if (!await CryptoUtils.checkPassword(user.passwordHash, user.salt, password))
+            throw new UnauthorizedException('Invalid password');
+
+        return await this.createSession(user);
+    }
+
+    public async loginSocial(email: string, password: string) {
         const user = await this.userStore.findOneByEmail(email);
         if (!user)
             throw new UnauthorizedException('User not found');
