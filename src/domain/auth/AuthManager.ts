@@ -7,7 +7,6 @@ import IUserStore from "data/database/stores/IUserStore";
 import ISessionStore from "data/database/stores/ISessionStore";
 import FacebookApi from "data/api/facebook/FacebookApi"
 import ILoginStore from "data/database/stores/ILoginStore";
-import LocalLogin from "data/database/entities/LocalLogin";
 
 @Injectable()
 export class AuthManager extends IAuthManager {
@@ -32,11 +31,11 @@ export class AuthManager extends IAuthManager {
         switch (type) {
             case "facebook":
                 const res = await this.facebookApi.authenticate(token);
+                res.id;
                 return {token: "", user: {id: "", email: ""}};
-            default:
-                return new Promise(() => {
-                    throw new BadRequestException("Bad request")
-                });
+            default: {
+                throw new BadRequestException("Bad request")
+            }
         }
     }
 
@@ -44,17 +43,18 @@ export class AuthManager extends IAuthManager {
         const user = await this.userStore.findOneByEmail(email);
         if (!user) {
             throw new UnauthorizedException('User not found');
-        } else {
-            const localData: LocalLogin | undefined = await this.loginStore.findOneLocal(user);
-            if (!localData) {
-                throw new UnauthorizedException('User not found');
-            } else {
-                if (!await CryptoUtils.checkPassword(localData.passwordHash, localData.salt, password))
-                    throw new UnauthorizedException('Invalid password');
-
-                return await this.createSession(user);
-            }
         }
+
+        const localLogin = await this.loginStore.findOneLocal(user);
+        if (!localLogin) {
+            throw new UnauthorizedException('User not found');
+        }
+
+        if (!await CryptoUtils.checkPassword(localLogin.passwordHash, localLogin.salt, password)) {
+            throw new UnauthorizedException('Invalid password');
+        }
+
+        return await this.createSession(user);
     }
 
     public async loginSocial(type: string, token: string) {
@@ -62,10 +62,9 @@ export class AuthManager extends IAuthManager {
             case "facebook":
                 const res = await this.facebookApi.authenticate(token);
                 return {token: "", user: {id: "", email: ""}};
-            default:
-                return new Promise(() => {
-                    throw new BadRequestException("Bad request")
-                });
+            default: {
+                throw new BadRequestException("Bad request")
+            }
         }
     }
 

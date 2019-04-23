@@ -9,8 +9,13 @@ export default class FacebookController {
 
     public authenticate(token: string): Promise<FacebookResponse> {
         return new Promise((resolve, reject) => {
-            api(`me?fields=email,name&access_token=${token}`, response => {
-                console.log(response.id)
+            const params = {
+                "fields": "email,name",
+                "access_token": token,
+            };
+            api(`me`, params, (response: FacebookResponse) => {
+                console.log(response.id);
+               resolve(response);
             });
         });
     }
