@@ -5,14 +5,18 @@ import User from "data/database/entities/User";
 
 @Entity()
 export default class FacebookLogin {
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn("uuid")
+    sid: string;
+
     @OneToOne(() => User, user => user.id)
     user: User;
 
     @Column('text')
     facebookUserId: string;
 
-    constructor(user: User, facebookUserId: string) {
+
+    constructor(sid: string, user: User, facebookUserId: string) {
+        this.sid = sid;
         this.user = user;
         this.facebookUserId = facebookUserId;
     }
