@@ -9,31 +9,39 @@ import LocalLogin from "data/database/entities/LocalLogin";
 @Injectable()
 export class LoginStore extends ILoginStore {
     constructor(
-        @InjectRepository(User) private readonly facebookRepository: Repository<FacebookLogin>,
-        @InjectRepository(User) private readonly localRepository: Repository<LocalLogin>,
+        @InjectRepository(LocalLogin) private readonly localLoginRepository: Repository<LocalLogin>,
+        @InjectRepository(FacebookLogin) private readonly facebookLoginRepository: Repository<FacebookLogin>,
     ) {
         super();
     }
 
-    async createLocal(user: User, passwordHash: string, salt: string): Promise<LocalLogin> {
-        const localUser = await this.localRepository.create({user, passwordHash, salt});
-        await this.localRepository.insert(localUser);
+    async createLocalLogin(user: User, email: string, passwordHash: string, salt: string) {
+        const localUser = await this.localLoginRepository.create({user, email, passwordHash, salt});
+        await this.localLoginRepository.insert(localUser);
         return localUser;
     }
 
-    async createFacebook(user: User, facebookUserId: string): Promise<FacebookLogin> {
-        const facebookUser = await this.facebookRepository.create({user, facebookUserId});
-        await this.facebookRepository.insert(facebookUser);
+    async createFacebookLogin(user: User, facebookUserId: string) {
+        const facebookUser = await this.facebookLoginRepository.create({user, facebookUserId});
+        await this.facebookLoginRepository.insert(facebookUser);
         return facebookUser;
     }
 
-    async findOneLocal(user: User): Promise<LocalLogin | undefined> {
-        return await this.localRepository.findOne({user});
+    async findLocalLogin(email: string) {
+        return await this.localLoginRepository.findOne(
+            {email},
+            {
+                relations: ["user"],
+            },
+        );
     }
 
-    async findOneByFacebookId(facebookUserId: string): Promise<boolean | undefined> {
-        const facebookUser = await this.facebookRepository.findOne({facebookUserId});
-        return !!facebookUser;
+    async findFacebookLogin(facebookUserId: string) {
+        return await this.facebookLoginRepository.findOne(
+            {facebookUserId},
+            {
+                relations: ["user"],
+            }
+        );
     }
-
 }

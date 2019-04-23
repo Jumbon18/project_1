@@ -14,8 +14,8 @@ export default class FacebookController {
                 "access_token": token,
             };
             api(`me`, params, (response: FacebookResponse) => {
-                console.log(response.id);
-               resolve(response);
+                // TODO: add error case
+                resolve(response);
             });
         });
     }

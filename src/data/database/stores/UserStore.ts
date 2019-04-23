@@ -12,13 +12,9 @@ export class UserStore extends IUserStore {
         super();
     }
 
-    async create(email: string): Promise<User> {
+    async createUser(email: string) {
         const user = await this.repository.create({email});
         await this.repository.insert(user);
         return user;
-    }
-
-    async findOneByEmail(email: string): Promise<User | undefined> {
-        return await this.repository.findOne({email});
     }
 }

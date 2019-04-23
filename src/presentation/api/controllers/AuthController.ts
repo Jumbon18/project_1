@@ -16,7 +16,7 @@ export class AuthController {
 
     @Post('register')
     public async register(@Body() {email, password}: RegisterRequest): Promise<Session> {
-        const session = await this.authManager.register(email, password);
+        const session = await this.authManager.registerLocal(email, password);
         return mapApiSession(session);
     }
 
@@ -28,7 +28,7 @@ export class AuthController {
 
     @Post('login')
     public async login(@Body() {email, password}: LoginRequest): Promise<Session> {
-        const session = await this.authManager.login(email, password);
+        const session = await this.authManager.loginLocal(email, password);
         return mapApiSession(session);
     }
 

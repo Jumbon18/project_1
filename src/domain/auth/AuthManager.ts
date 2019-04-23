@@ -19,53 +19,66 @@ export class AuthManager extends IAuthManager {
         super();
     }
 
-    public async register(email: string, password: string) {
+    public async registerLocal(email: string, password: string) {
         const {passwordHash, salt} = await CryptoUtils.hashPassword(password);
-        const user = await this.userStore.create(email);
-        await this.loginStore.createLocal(user, passwordHash, salt);
+        const user = await this.userStore.createUser(email);
+        await this.loginStore.createLocalLogin(user, email, passwordHash, salt);
 
         return await this.createSession(user);
     }
 
     public async registerSocial(type: string, token: string) {
         switch (type) {
-            case "facebook":
-                const res = await this.facebookApi.authenticate(token);
-                res.id;
-                return {token: "", user: {id: "", email: ""}};
+            case "facebook": {
+                return await this.registerFacebook(token);
+            }
             default: {
-                throw new BadRequestException("Bad request")
+                throw new BadRequestException()
             }
         }
     }
 
-    public async login(email: string, password: string) {
-        const user = await this.userStore.findOneByEmail(email);
-        if (!user) {
-            throw new UnauthorizedException('User not found');
-        }
-
-        const localLogin = await this.loginStore.findOneLocal(user);
-        if (!localLogin) {
-            throw new UnauthorizedException('User not found');
-        }
-
-        if (!await CryptoUtils.checkPassword(localLogin.passwordHash, localLogin.salt, password)) {
-            throw new UnauthorizedException('Invalid password');
-        }
+    private async registerFacebook(token: string) {
+        const {email, id} = await this.facebookApi.authenticate(token);
+        const user = await this.userStore.createUser(email);
+        await this.loginStore.createFacebookLogin(user, id);
 
         return await this.createSession(user);
     }
 
+    public async loginLocal(email: string, password: string) {
+        const login = await this.loginStore.findLocalLogin(email);
+        if (!login) {
+            throw new UnauthorizedException('Login not found');
+        }
+
+        if (!await CryptoUtils.checkPassword(login.passwordHash, login.salt, password)) {
+            throw new UnauthorizedException('Invalid password');
+        }
+
+        console.log(login);
+        return await this.createSession(login.user);
+    }
+
     public async loginSocial(type: string, token: string) {
         switch (type) {
-            case "facebook":
-                const res = await this.facebookApi.authenticate(token);
-                return {token: "", user: {id: "", email: ""}};
+            case "facebook": {
+                return await this.loginFacebook(token);
+            }
             default: {
-                throw new BadRequestException("Bad request")
+                throw new BadRequestException()
             }
         }
+    }
+
+    private async loginFacebook(token: string) {
+        const {id} = await this.facebookApi.authenticate(token);
+        const login = await this.loginStore.findFacebookLogin(id);
+        if (!login) {
+            throw new UnauthorizedException('Login not found');
+        }
+
+        return await this.createSession(login.user);
     }
 
     private async createSession(user: User) {
