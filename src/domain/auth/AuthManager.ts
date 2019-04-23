@@ -1,40 +1,89 @@
-import {Injectable, UnauthorizedException} from '@nestjs/common';
+import {BadRequestException, Injectable, UnauthorizedException} from '@nestjs/common';
 import {CryptoUtils} from 'domain/auth/CryptoUtils';
 import {IAuthManager} from "domain/auth/IAuthManager";
 import User from "data/database/entities/User";
-import {mapDbSession} from "domain/mappers/DbMappers";
+import {mapFromDbSession} from "domain/mappers/DbMappers";
 import IUserStore from "data/database/stores/IUserStore";
 import ISessionStore from "data/database/stores/ISessionStore";
+import FacebookApi from "data/api/facebook/FacebookApi"
+import ILoginStore from "data/database/stores/ILoginStore";
 
 @Injectable()
 export class AuthManager extends IAuthManager {
     constructor(
         private readonly userStore: IUserStore,
+        private readonly loginStore: ILoginStore,
         private readonly sessionStore: ISessionStore,
+        private readonly facebookApi: FacebookApi,
     ) {
         super();
     }
 
-    public async register(email: string, password: string) {
+    public async registerLocal(email: string, password: string) {
         const {passwordHash, salt} = await CryptoUtils.hashPassword(password);
-        const user = await this.userStore.create(email, passwordHash, salt);
+        const user = await this.userStore.createUser(email);
+        await this.loginStore.createLocalLogin(user, email, passwordHash, salt);
 
         return await this.createSession(user);
     }
 
-    public async login(email: string, password: string) {
-        const user = await this.userStore.findOneByEmail(email);
-        if (!user)
-            throw new UnauthorizedException('User not found');
-        if (!await CryptoUtils.checkPassword(user.passwordHash, user.salt, password))
-            throw new UnauthorizedException('Invalid password');
+    public async registerSocial(type: string, token: string) {
+        switch (type) {
+            case "facebook": {
+                return await this.registerFacebook(token);
+            }
+            default: {
+                throw new BadRequestException()
+            }
+        }
+    }
+
+    private async registerFacebook(token: string) {
+        const {email, id} = await this.facebookApi.authenticate(token);
+        const user = await this.userStore.createUser(email);
+        await this.loginStore.createFacebookLogin(user, id);
 
         return await this.createSession(user);
+    }
+
+    public async loginLocal(email: string, password: string) {
+        const login = await this.loginStore.findLocalLogin(email);
+        if (!login) {
+            throw new UnauthorizedException('Login not found');
+        }
+
+        if (!await CryptoUtils.checkPassword(login.passwordHash, login.salt, password)) {
+            throw new UnauthorizedException('Invalid password');
+        }
+
+        console.log(login);
+        return await this.createSession(login.user);
+    }
+
+    public async loginSocial(type: string, token: string) {
+        switch (type) {
+            case "facebook": {
+                return await this.loginFacebook(token);
+            }
+            default: {
+                throw new BadRequestException()
+            }
+        }
+    }
+
+    private async loginFacebook(token: string) {
+        const {id} = await this.facebookApi.authenticate(token);
+        const login = await this.loginStore.findFacebookLogin(id);
+        if (!login) {
+            throw new UnauthorizedException('Login not found');
+        }
+
+        return await this.createSession(login.user);
     }
 
     private async createSession(user: User) {
         const token = CryptoUtils.createToken();
         const session = await this.sessionStore.createSession(token, user);
-        return mapDbSession(session);
+        return mapFromDbSession(session);
     }
 }
