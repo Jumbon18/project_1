@@ -6,6 +6,7 @@ export default class LocalLogin {
     @PrimaryGeneratedColumn("uuid")
     sid: string;
 
+    @Column("uuid")
     @OneToOne(() => User, user => user.id)
     user: User;
 
