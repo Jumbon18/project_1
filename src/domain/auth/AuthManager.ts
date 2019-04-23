@@ -6,11 +6,14 @@ import {mapDbSession} from "domain/mappers/DbMappers";
 import IUserStore from "data/database/stores/IUserStore";
 import ISessionStore from "data/database/stores/ISessionStore";
 import FacebookApi from "data/api/facebook/FacebookApi"
+import ILoginStore from "data/database/stores/ILoginStore";
+import LocalLogin from "data/database/entities/LocalLogin";
 
 @Injectable()
 export class AuthManager extends IAuthManager {
     constructor(
         private readonly userStore: IUserStore,
+        private readonly loginStore: ILoginStore,
         private readonly sessionStore: ISessionStore,
         private readonly facebookApi: FacebookApi,
     ) {
@@ -19,7 +22,8 @@ export class AuthManager extends IAuthManager {
 
     public async register(email: string, password: string) {
         const {passwordHash, salt} = await CryptoUtils.hashPassword(password);
-        const user = await this.userStore.create(email, passwordHash, salt);
+        const user = await this.userStore.create(email);
+        await this.loginStore.createLocal(user, passwordHash, salt);
 
         return await this.createSession(user);
     }
@@ -38,12 +42,19 @@ export class AuthManager extends IAuthManager {
 
     public async login(email: string, password: string) {
         const user = await this.userStore.findOneByEmail(email);
-        if (!user)
+        if (!user) {
             throw new UnauthorizedException('User not found');
-        if (!await CryptoUtils.checkPassword(user.passwordHash, user.salt, password))
-            throw new UnauthorizedException('Invalid password');
+        } else {
+            const localData: LocalLogin | undefined = await this.loginStore.findOneLocal(user);
+            if (!localData) {
+                throw new UnauthorizedException('User not found');
+            } else {
+                if (!await CryptoUtils.checkPassword(localData.passwordHash, localData.salt, password))
+                    throw new UnauthorizedException('Invalid password');
 
-        return await this.createSession(user);
+                return await this.createSession(user);
+            }
+        }
     }
 
     public async loginSocial(type: string, token: string) {
