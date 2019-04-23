@@ -1,10 +1,13 @@
 import {IsEmail, IsNotEmpty, IsString} from 'class-validator';
+import {ApiModelProperty} from "@nestjs/swagger";
 
 export default class RegisterRequest {
+    @ApiModelProperty()
     @IsNotEmpty()
     @IsEmail()
     readonly email: string;
 
+    @ApiModelProperty()
     @IsNotEmpty()
     @IsString()
     password: string;

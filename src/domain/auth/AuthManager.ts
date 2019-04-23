@@ -7,6 +7,7 @@ import IUserStore from "data/database/stores/IUserStore";
 import ISessionStore from "data/database/stores/ISessionStore";
 import FacebookApi from "data/api/facebook/FacebookApi"
 import ILoginStore from "data/database/stores/ILoginStore";
+import {SocialAuthType} from "entities/SocialAuthType";
 
 @Injectable()
 export class AuthManager extends IAuthManager {
@@ -27,9 +28,9 @@ export class AuthManager extends IAuthManager {
         return await this.createSession(user);
     }
 
-    public async registerSocial(type: string, token: string) {
+    public async registerSocial(type: SocialAuthType, token: string) {
         switch (type) {
-            case "facebook": {
+            case SocialAuthType.Facebook: {
                 return await this.registerFacebook(token);
             }
             default: {
@@ -60,9 +61,9 @@ export class AuthManager extends IAuthManager {
         return await this.createSession(login.user);
     }
 
-    public async loginSocial(type: string, token: string) {
+    public async loginSocial(type: SocialAuthType, token: string) {
         switch (type) {
-            case "facebook": {
+            case SocialAuthType.Facebook: {
                 return await this.loginFacebook(token);
             }
             default: {
