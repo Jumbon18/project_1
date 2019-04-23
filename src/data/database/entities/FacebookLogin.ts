@@ -1,16 +1,19 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn} from "typeorm";
+import {PrimaryColumn} from "typeorm/decorator/columns/PrimaryColumn";
+import User from "data/database/entities/User";
 
 
 @Entity()
 export default class FacebookLogin {
-    @PrimaryGeneratedColumn("uuid")
-    user_id: string;
+    @PrimaryColumn()
+    @OneToOne(() => User, user => user.id)
+    user: User;
 
     @Column('text')
-    token: string;
+    facebookUserId: string;
 
-    constructor(user_id: string, token: string) {
-        this.user_id = user_id;
-        this.token = token;
+    constructor(user: User, facebookUserId: string) {
+        this.user = user;
+        this.facebookUserId = facebookUserId;
     }
 }

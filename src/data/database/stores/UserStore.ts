@@ -12,8 +12,8 @@ export class UserStore extends IUserStore {
         super();
     }
 
-    async create(email: string, passwordHash: string, salt: string): Promise<User> {
-        const user = await this.repository.create({email, passwordHash, salt});
+    async create(email: string): Promise<User> {
+        const user = await this.repository.create({email});
         await this.repository.insert(user);
         return user;
     }

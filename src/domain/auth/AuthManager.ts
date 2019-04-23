@@ -1,4 +1,4 @@
-import {Injectable, UnauthorizedException} from '@nestjs/common';
+import {BadRequestException, Injectable, UnauthorizedException} from '@nestjs/common';
 import {CryptoUtils} from 'domain/auth/CryptoUtils';
 import {IAuthManager} from "domain/auth/IAuthManager";
 import User from "data/database/entities/User";
@@ -12,7 +12,7 @@ export class AuthManager extends IAuthManager {
     constructor(
         private readonly userStore: IUserStore,
         private readonly sessionStore: ISessionStore,
-        private readonly facebookApi:FacebookApi,
+        private readonly facebookApi: FacebookApi,
     ) {
         super();
     }
@@ -25,8 +25,15 @@ export class AuthManager extends IAuthManager {
     }
 
     public async registerSocial(type: string, token: string) {
-        const res = await this.facebookApi.authenticate(token);
-        return {token: "", user: {id: "", email: ""}};
+        switch (type) {
+            case "facebook":
+                const res = await this.facebookApi.authenticate(token);
+                return {token: "", user: {id: "", email: ""}};
+            default:
+                return new Promise(() => {
+                    throw new BadRequestException("Bad request")
+                });
+        }
     }
 
     public async login(email: string, password: string) {
@@ -39,14 +46,16 @@ export class AuthManager extends IAuthManager {
         return await this.createSession(user);
     }
 
-    public async loginSocial(email: string, password: string) {
-        const user = await this.userStore.findOneByEmail(email);
-        if (!user)
-            throw new UnauthorizedException('User not found');
-        if (!await CryptoUtils.checkPassword(user.passwordHash, user.salt, password))
-            throw new UnauthorizedException('Invalid password');
-
-        return await this.createSession(user);
+    public async loginSocial(type: string, token: string) {
+        switch (type) {
+            case "facebook":
+                const res = await this.facebookApi.authenticate(token);
+                return {token: "", user: {id: "", email: ""}};
+            default:
+                return new Promise(() => {
+                    throw new BadRequestException("Bad request")
+                });
+        }
     }
 
     private async createSession(user: User) {
