@@ -1,5 +1,4 @@
 import {api} from "fb"
-import * as https from "https";
 import {FacebookResponse} from "data/api/facebook/FacebookResponse";
 import {Injectable} from "@nestjs/common";
 
@@ -10,7 +9,7 @@ export default class FacebookController {
 
     public authenticate(token: string): Promise<FacebookResponse> {
         return new Promise((resolve, reject) => {
-            api(`debug_token?access_token=${token}&input_token=${token}`, response => {
+            api(`me?fields=email,name&access_token=${token}`, response => {
                 console.log(response)
             });
         });

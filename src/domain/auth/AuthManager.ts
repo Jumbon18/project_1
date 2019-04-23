@@ -12,7 +12,7 @@ export class AuthManager extends IAuthManager {
     constructor(
         private readonly userStore: IUserStore,
         private readonly sessionStore: ISessionStore,
-        private readonly facebookApi:FacebookApi
+        private readonly facebookApi:FacebookApi,
     ) {
         super();
     }

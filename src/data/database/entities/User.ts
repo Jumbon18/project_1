@@ -10,20 +10,10 @@ export default class User {
     })
     email: string;
 
-    @Column('text')
-    passwordHash: string;
-
-    @Column('text')
-    salt: string;
-
     constructor(id: string,
                 email: string,
-                password_hash: string,
-                salt: string,
     ) {
         this.id = id;
         this.email = email;
-        this.passwordHash = password_hash;
-        this.salt = salt;
     }
 }
