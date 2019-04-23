@@ -21,5 +21,4 @@ import FacebookLogin from "data/database/entities/FacebookLogin";
     ],
     exports: []
 })
-export class DatabaseModule {
-}
+export class DatabaseModule {}

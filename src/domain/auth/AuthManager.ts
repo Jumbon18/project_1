@@ -2,7 +2,7 @@ import {BadRequestException, Injectable, UnauthorizedException} from '@nestjs/co
 import {CryptoUtils} from 'domain/auth/CryptoUtils';
 import {IAuthManager} from "domain/auth/IAuthManager";
 import User from "data/database/entities/User";
-import {mapDbSession} from "domain/mappers/DbMappers";
+import {mapFromDbSession} from "domain/mappers/DbMappers";
 import IUserStore from "data/database/stores/IUserStore";
 import ISessionStore from "data/database/stores/ISessionStore";
 import FacebookApi from "data/api/facebook/FacebookApi"
@@ -84,6 +84,6 @@ export class AuthManager extends IAuthManager {
     private async createSession(user: User) {
         const token = CryptoUtils.createToken();
         const session = await this.sessionStore.createSession(token, user);
-        return mapDbSession(session);
+        return mapFromDbSession(session);
     }
 }
