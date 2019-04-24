@@ -19,8 +19,6 @@ export class UserStore extends IUserStore {
     }
 
     async findUser(email: string) {
-        const user = await this.repository.findOne({"email": email});
-        if (!user) return undefined;
-        return user;
+        return await this.repository.findOne({"email": email});
     }
 }
