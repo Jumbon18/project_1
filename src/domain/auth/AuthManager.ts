@@ -22,6 +22,9 @@ export class AuthManager extends IAuthManager {
 
     public async registerLocal(email: string, password: string) {
         const {passwordHash, salt} = await CryptoUtils.hashPassword(password);
+        if (await this.userStore.findUser(email)) {
+            throw new UnauthorizedException('Such user already exists');
+        }
         const user = await this.userStore.createUser(email);
         await this.loginStore.createLocalLogin(user, email, passwordHash, salt);
 
@@ -41,6 +44,9 @@ export class AuthManager extends IAuthManager {
 
     private async registerFacebook(token: string) {
         const {email, id} = await this.facebookApi.authenticate(token);
+        if (await this.userStore.findUser(email)) {
+            throw new UnauthorizedException('Such user already exists');
+        }
         const user = await this.userStore.createUser(email);
         await this.loginStore.createFacebookLogin(user, id);
 
