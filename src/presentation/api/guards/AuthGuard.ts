@@ -1,5 +1,6 @@
 import {CanActivate, ExecutionContext, Injectable} from "@nestjs/common";
 import IAuthService from "presentation/api/services/IAuthService";
+import {Request} from "express";
 
 @Injectable()
 export default class AuthGuard implements CanActivate {
@@ -7,8 +8,8 @@ export default class AuthGuard implements CanActivate {
     }
 
     async canActivate(context: ExecutionContext) {
-        const session = await this.authService.getSession(context);
-
+        const request: Request = context.switchToHttp().getRequest();
+        const session = await this.authService.getSession(request);
         return !!session;
     }
 }
