@@ -82,6 +82,12 @@ export class AuthManager extends IAuthManager {
         return await this.createSession(login.user);
     }
 
+    async getSession(token: string) {
+        const session = await this.sessionStore.findSession(token);
+        if (!session) return;
+        return mapFromDbSession(session);
+    }
+
     private async createSession(user: User) {
         const token = CryptoUtils.createToken();
         const session = await this.sessionStore.createSession(token, user);

@@ -18,4 +18,13 @@ export class SessionStore extends ISessionStore {
         await this.repository.insert(session);
         return session;
     }
+
+    async findSession(token: string) {
+        return await this.repository.findOne(
+            {token},
+            {
+                relations: ["user"],
+            }
+        );
+    }
 }

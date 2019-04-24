@@ -1,4 +1,4 @@
-import {Body, Controller, Post} from '@nestjs/common';
+import {Body, Controller, Post, UseGuards} from '@nestjs/common';
 import {IAuthManager} from "domain/auth/IAuthManager";
 import RegisterRequest from "presentation/api/entities/auth/RegisterRequest";
 import Session from "presentation/api/entities/Session";
@@ -7,6 +7,7 @@ import {mapToApiSession} from "presentation/mappers/ApiMappers";
 import SocialLoginRequest from "presentation/api/entities/auth/SocialLoginRequest";
 import SocialRegisterRequest from "presentation/api/entities/auth/SocialRegisterRequest";
 import {ApiOkResponse, ApiUseTags} from "@nestjs/swagger";
+import AuthGuard from "presentation/api/guards/AuthGuard";
 
 @ApiUseTags("Auth")
 @Controller("api")
@@ -42,5 +43,16 @@ export class AuthController {
     public async loginSocial(@Body() {type, token}: SocialLoginRequest): Promise<Session> {
         const session = await this.authManager.loginSocial(type, token);
         return mapToApiSession(session);
+    }
+
+    @Post('ping')
+    @ApiOkResponse({})
+    public ping() {
+    }
+
+    @Post('ping/guard')
+    @UseGuards(AuthGuard)
+    @ApiOkResponse({})
+    public pingGuard() {
     }
 }
