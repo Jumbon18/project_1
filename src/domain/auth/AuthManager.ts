@@ -5,9 +5,9 @@ import User from "data/database/entities/User";
 import {mapFromDbSession} from "domain/mappers/DbMappers";
 import IUserStore from "data/database/stores/IUserStore";
 import ISessionStore from "data/database/stores/ISessionStore";
-import FacebookApi from "data/api/facebook/FacebookApi"
 import ILoginStore from "data/database/stores/ILoginStore";
 import {SocialAuthType} from "entities/SocialAuthType";
+import IFacebookApi from "data/api/facebook/IFacebookApi";
 
 @Injectable()
 export class AuthManager extends IAuthManager {
@@ -15,7 +15,7 @@ export class AuthManager extends IAuthManager {
         private readonly userStore: IUserStore,
         private readonly loginStore: ILoginStore,
         private readonly sessionStore: ISessionStore,
-        private readonly facebookApi: FacebookApi,
+        private readonly facebookApi: IFacebookApi,
     ) {
         super();
     }
