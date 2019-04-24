@@ -14,9 +14,13 @@ export default class FacebookController {
                 "access_token": token,
             };
             api(`me`, params, (response: FacebookResponse) => {
-                // TODO: add error case
-                resolve(response);
+                if (!response || response.error) {
+                   return reject(new Error("Malformed access token"));
+                } else {
+                  return resolve(response);
+                }
             });
         });
     }
 }
+

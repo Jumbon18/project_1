@@ -34,7 +34,7 @@ export class AuthManager extends IAuthManager {
                 return await this.registerFacebook(token);
             }
             default: {
-                throw new BadRequestException()
+                throw new BadRequestException();
             }
         }
     }
@@ -86,6 +86,12 @@ export class AuthManager extends IAuthManager {
         const session = await this.sessionStore.findSession(token);
         if (!session) return;
         return mapFromDbSession(session);
+    }
+
+    async getUser(token: string) {
+        const session = await this.getSession(token);
+        if (!session) return;
+        return session.user;
     }
 
     private async createSession(user: User) {

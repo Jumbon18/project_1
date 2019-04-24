@@ -13,8 +13,13 @@ export class UserStore extends IUserStore {
     }
 
     async createUser(email: string) {
-        const user = await this.repository.create({email});
-        await this.repository.insert(user);
-        return user;
+        return new Promise<User>(async (resolve, reject) => {
+            if (await this.repository.findOne({"email": email})) {
+                return reject(new Error("Current user already exists"));
+            }
+            const user = await this.repository.create({email});
+            await this.repository.insert(user);
+            return resolve(user);
+        });
     }
 }
