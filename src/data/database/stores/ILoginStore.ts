@@ -7,4 +7,5 @@ export default abstract class ILoginStore {
     abstract createFacebookLogin(user: User, facebookUserId: string): Promise<FacebookLogin>;
     abstract findLocalLogin(email: string): Promise<LocalLogin | undefined>;
     abstract findFacebookLogin(facebookUserId: string): Promise<FacebookLogin | undefined>;
+    abstract updateLocalLoginPassword(email: string, passwordHash: string, salt: string): Promise<void>;
 }
