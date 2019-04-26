@@ -1,8 +1,8 @@
 import {Module} from '@nestjs/common';
 import {MailerModule} from '@nest-modules/mailer';
-import {config} from "data/emailService/EmailSenderConfig";
-import {IEmailSenderService} from "data/emailService/IEmailSenderService";
-import {EmailSenderService} from "data/emailService/EmailSenderService";
+import {config} from "data/email/EmailSenderConfig";
+import {IEmailSenderService} from "data/email/IEmailSenderService";
+import {EmailSenderService} from "data/email/EmailSenderService";
 
 const configuration = config.default;
 
