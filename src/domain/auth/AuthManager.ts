@@ -1,4 +1,4 @@
-import {BadRequestException, Injectable, UnauthorizedException} from '@nestjs/common';
+import {BadRequestException, Injectable, NotFoundException, UnauthorizedException} from '@nestjs/common';
 import {CryptoUtils} from 'domain/auth/CryptoUtils';
 import {IAuthManager} from "domain/auth/IAuthManager";
 import User from "data/database/entities/User";
@@ -8,6 +8,8 @@ import ISessionStore from "data/database/stores/ISessionStore";
 import ILoginStore from "data/database/stores/ILoginStore";
 import {SocialAuthType} from "entities/SocialAuthType";
 import IFacebookApi from "data/api/facebook/IFacebookApi";
+import PasswordUtils from "domain/auth/PasswordUtils";
+import {IMailerManager} from "domain/mailerManager/IMailerManager";
 
 @Injectable()
 export class AuthManager extends IAuthManager {
@@ -16,6 +18,7 @@ export class AuthManager extends IAuthManager {
         private readonly loginStore: ILoginStore,
         private readonly sessionStore: ISessionStore,
         private readonly facebookApi: IFacebookApi,
+        private readonly mailerManager: IMailerManager,
     ) {
         super();
     }
@@ -75,6 +78,17 @@ export class AuthManager extends IAuthManager {
             default: {
                 throw new BadRequestException()
             }
+        }
+    }
+
+    public async forgotPassword(email: string) {
+        if (await this.userStore.findUser(email)) {
+            const generatedPassword = PasswordUtils.generate();
+            const {passwordHash, salt} = await CryptoUtils.hashPassword(generatedPassword);
+            await this.loginStore.updateLocalLogin(email, {passwordHash, salt})
+            await this.mailerManager.sendNewPassword(email, generatedPassword);
+        } else {
+            throw new NotFoundException("Such user does not exist");
         }
     }
 

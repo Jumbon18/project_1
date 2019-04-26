@@ -1,3 +1,3 @@
 export abstract class IMailerManager {
-    abstract sendNewPassword(email: string): Promise<void>;
+    abstract sendNewPassword(email: string, password: string): Promise<void>;
 }
