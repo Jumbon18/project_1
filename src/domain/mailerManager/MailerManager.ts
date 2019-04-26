@@ -1,6 +1,6 @@
-import {Injectable} from '@nestjs/common';
+import {Injectable, ServiceUnavailableException} from '@nestjs/common';
 import {IMailerManager} from 'domain/mailerManager/IMailerManager';
-import {IEmailSenderService} from 'data/emailService/IEmailSenderService';
+import {IEmailSenderService} from 'data/email/IEmailSenderService';
 
 @Injectable()
 export class MailerManager implements IMailerManager {
@@ -15,7 +15,7 @@ export class MailerManager implements IMailerManager {
                 message: `Your new password for FilmPass: ${password}`
             });
         } catch (e) {
-
+            throw new ServiceUnavailableException("Problem occurred when sending your password, please try again later.")
         }
     }
 }
