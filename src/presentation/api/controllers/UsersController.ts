@@ -6,12 +6,14 @@ import IAuthService from "presentation/api/services/IAuthService";
 import {Request} from 'express';
 import {mapToApiUser} from "presentation/mappers/ApiMappers";
 import ForgotPasswordRequest from "presentation/api/entities/auth/ForgotPasswordRequest";
+import {IMailerManager} from "domain/mailerManager/IMailerManager";
 
 @ApiUseTags("Users")
 @Controller("api/users")
 export class UsersController {
     constructor(
         private readonly authService: IAuthService,
+        private readonly mailerManager: IMailerManager
     ) {
     }
 
@@ -23,10 +25,10 @@ export class UsersController {
         return mapToApiUser(session.user);
     }
 
-    @Put('forgotPassword')
-    @HttpCode(201)
+    @Post('forgotPassword')
+    @ApiOkResponse({})
     public async changeUserPassword(@Body() request: ForgotPasswordRequest): Promise<void> {
         const email = request.email;
-        await this.authService.updateUserPassword(email);
+        await this.mailerManager.sendNewPassword(email);
     }
 }

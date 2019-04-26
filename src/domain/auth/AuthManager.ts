@@ -1,6 +1,4 @@
 import {BadRequestException, Injectable, UnauthorizedException} from '@nestjs/common';
-import * as generator from "generate-password";
-import * as nodemailer from "nodemailer";
 import {CryptoUtils} from 'domain/auth/CryptoUtils';
 import {IAuthManager} from "domain/auth/IAuthManager";
 import User from "data/database/entities/User";
@@ -101,36 +99,4 @@ export class AuthManager extends IAuthManager {
         const session = await this.sessionStore.createSession(token, user);
         return mapFromDbSession(session);
     }
-
-    public async replaceLoginPasswordLocal(email: string) {
-        const generatedPassword = generator.generate({length: 10, numbers: true});
-
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: 'taraskozub20@gmail.com',
-                pass: 'sobachera15'
-            }
-        });
-
-        const mailOptions = {
-            from: 'taraskozub20@gmail.com',
-            to: email,
-            subject: 'New password for FilmPass',
-            html: `<p>Your new password for FilmPass: ${generatedPassword}</p>`
-        };
-
-        transporter.sendMail(mailOptions, function (err, info) {
-            if(err)
-                console.log(err);
-            else
-                console.log(info);
-        });
-
-        const {passwordHash, salt} = await CryptoUtils.hashPassword(generatedPassword);
-        if (await this.userStore.findUser(email)) {
-            await this.loginStore.updateLocalLoginPassword(email, passwordHash, salt);
-        }
-    }
-
 }

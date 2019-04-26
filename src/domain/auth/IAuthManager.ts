@@ -7,5 +7,4 @@ export abstract class IAuthManager {
     abstract loginLocal(email: string, password: string): Promise<Session>;
     abstract loginSocial(type: SocialAuthType, token: string): Promise<Session>;
     abstract getSession(token: string): Promise<Session | undefined>;
-    abstract replaceLoginPasswordLocal(email:string): Promise<void>;
 }

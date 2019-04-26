@@ -4,7 +4,7 @@
 "host": "localhost",
 "port": 5432,
 "username":"postgres",
-"password": "LVmpmh%{AY89*Wmf",
+"password": "postgres",
 "database": "FilmPass",
 "synchronize": true,
 "dropSchema": false,
