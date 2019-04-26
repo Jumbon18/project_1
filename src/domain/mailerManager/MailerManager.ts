@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common';
 import {IMailerManager} from 'domain/mailerManager/IMailerManager';
-import {IEmailSenderService} from 'data/emailService/IEmailSenderService';
+import {IEmailSenderService} from 'data/email/IEmailSenderService';
 import IUserStore from "data/database/stores/IUserStore";
 import ILoginStore from "data/database/stores/ILoginStore";
 import PasswordUtils from "domain/mailerManager/PasswordUtils";

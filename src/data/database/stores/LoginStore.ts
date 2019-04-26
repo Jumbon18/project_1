@@ -46,6 +46,6 @@ export class LoginStore extends ILoginStore {
     }
 
     async updateLocalLogin(email: string, fields: {passwordHash: string, salt: string}) {
-        await this.localLoginRepository.update({"email": email}, fields);
+        await this.localLoginRepository.update({email}, fields);
     }
 }
