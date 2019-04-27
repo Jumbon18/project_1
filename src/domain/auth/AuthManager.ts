@@ -1,4 +1,4 @@
-import {BadRequestException, Injectable, NotFoundException, UnauthorizedException} from '@nestjs/common';
+import {BadRequestException, Injectable, UnauthorizedException} from '@nestjs/common';
 import {CryptoUtils} from 'domain/auth/CryptoUtils';
 import {IAuthManager} from "domain/auth/IAuthManager";
 import User from "data/database/entities/User";
@@ -81,17 +81,6 @@ export class AuthManager extends IAuthManager {
         }
     }
 
-    public async forgotPassword(email: string) {
-        if (await this.userStore.findUser(email)) {
-            const generatedPassword = PasswordUtils.generate();
-            const {passwordHash, salt} = await CryptoUtils.hashPassword(generatedPassword);
-            await this.loginStore.updateLocalLogin(email, {passwordHash, salt})
-            await this.mailerManager.sendNewPassword(email, generatedPassword);
-        } else {
-            throw new NotFoundException("Such user does not exist");
-        }
-    }
-
     private async loginFacebook(token: string) {
         const {id} = await this.facebookApi.authenticate(token);
         const login = await this.loginStore.findFacebookLogin(id);
@@ -100,6 +89,19 @@ export class AuthManager extends IAuthManager {
         }
 
         return await this.createSession(login.user);
+    }
+
+    public async forgotPassword(email: string) {
+        const localLogin = await this.loginStore.findLocalLogin(email);
+        if (!localLogin) {
+            throw new BadRequestException("Cannot find user registered with this email. Try another email or Facebook authentication.");
+        }
+
+        const generatedPassword = PasswordUtils.generate();
+        await this.mailerManager.sendNewPassword(email, generatedPassword);
+
+        const {passwordHash, salt} = await CryptoUtils.hashPassword(generatedPassword);
+        await this.loginStore.updateLocalLogin(email, {passwordHash, salt});
     }
 
     async getSession(token: string) {
