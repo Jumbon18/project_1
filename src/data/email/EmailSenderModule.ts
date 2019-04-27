@@ -16,6 +16,8 @@ const configuration = config.default;
             useClass: EmailSenderService,
         },
     ],
-    exports: [IEmailSenderService]
+    exports: [
+        IEmailSenderService,
+    ],
 })
 export class EmailSenderModule {}

@@ -9,7 +9,7 @@ import ILoginStore from "data/database/stores/ILoginStore";
 import {SocialAuthType} from "entities/SocialAuthType";
 import IFacebookApi from "data/api/facebook/IFacebookApi";
 import PasswordUtils from "domain/auth/PasswordUtils";
-import {IMailerManager} from "domain/mailerManager/IMailerManager";
+import {IMailerManager} from "domain/mailer/IMailerManager";
 
 @Injectable()
 export class AuthManager extends IAuthManager {

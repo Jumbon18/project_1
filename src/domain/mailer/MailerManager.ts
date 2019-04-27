@@ -1,5 +1,5 @@
 import {Injectable, ServiceUnavailableException} from '@nestjs/common';
-import {IMailerManager} from 'domain/mailerManager/IMailerManager';
+import {IMailerManager} from 'domain/mailer/IMailerManager';
 import {IEmailSenderService} from 'data/email/IEmailSenderService';
 
 @Injectable()

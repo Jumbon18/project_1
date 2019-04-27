@@ -3,13 +3,13 @@ import {AuthManager} from 'domain/auth/AuthManager';
 import {StoresModule} from "data/database/stores/StoresModule";
 import {IAuthManager} from "domain/auth/IAuthManager";
 import {FacebookApiModule} from "data/api/facebook/FacebookApiModule";
-import {MailerManagerModule} from "domain/mailerManager/MailerManagerModule";
+import {MailerModule} from "domain/mailer/MailerModule";
 
 @Module({
     imports: [
         FacebookApiModule,
         StoresModule,
-        MailerManagerModule
+        MailerModule,
     ],
     providers: [
         {

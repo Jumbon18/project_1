@@ -8,6 +8,7 @@ import SocialLoginRequest from "presentation/api/entities/auth/SocialLoginReques
 import SocialRegisterRequest from "presentation/api/entities/auth/SocialRegisterRequest";
 import {ApiOkResponse, ApiUseTags} from "@nestjs/swagger";
 import AuthGuard from "presentation/api/guards/AuthGuard";
+import ForgotPasswordRequest from "presentation/api/entities/auth/ForgotPasswordRequest";
 
 @ApiUseTags("Auth")
 @Controller("api")
@@ -43,6 +44,12 @@ export class AuthController {
     public async loginSocial(@Body() {type, token}: SocialLoginRequest): Promise<Session> {
         const session = await this.authManager.loginSocial(type, token);
         return mapToApiSession(session);
+    }
+
+    @Post('forgotPassword')
+    @ApiOkResponse({})
+    public async changeUserPassword(@Body() {email}: ForgotPasswordRequest): Promise<void> {
+        await this.authManager.forgotPassword(email);
     }
 
     @Post('ping')

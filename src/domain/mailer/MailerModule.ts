@@ -1,7 +1,7 @@
 import {Module} from '@nestjs/common';
 import {EmailSenderModule} from 'data/email/EmailSenderModule';
-import {IMailerManager} from 'domain/mailerManager/IMailerManager';
-import {MailerManager} from 'domain/mailerManager/MailerManager';
+import {IMailerManager} from 'domain/mailer/IMailerManager';
+import {MailerManager} from 'domain/mailer/MailerManager';
 
 @Module({
     imports: [EmailSenderModule],
@@ -15,4 +15,4 @@ import {MailerManager} from 'domain/mailerManager/MailerManager';
         IMailerManager,
     ],
 })
-export class MailerManagerModule{}
+export class MailerModule {}
